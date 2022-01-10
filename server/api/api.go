@@ -229,6 +229,9 @@ func (a *api) call(w http.ResponseWriter, r *http.Request, mode core.CallMode, d
 }
 
 func corsValidator() OriginValidator {
+	// *.fujicoin.org
+	fujicoinRegex := regexp.MustCompile(`^https://([[:alnum:]\-_]+\.)*fujicoin\.org$`)
+
 	// *.trezor.io
 	trezorRegex := regexp.MustCompile(`^https://([[:alnum:]\-_]+\.)*trezor\.io$`)
 
@@ -242,6 +245,10 @@ func corsValidator() OriginValidator {
 	develRegex := regexp.MustCompile(`^https://([[:alnum:]\-_]+\.)*sldev\.cz$`)
 
 	v := func(origin string) bool {
+		if fujicoinRegex.MatchString(origin) {
+			return true
+		}
+
 		if trezorRegex.MatchString(origin) {
 			return true
 		}
